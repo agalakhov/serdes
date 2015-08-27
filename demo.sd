@@ -1,0 +1,4 @@
+FooStruct
+    foo : u8
+    bar : u16le
+    baz : u16le
