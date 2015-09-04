@@ -7,10 +7,12 @@ class Line:
         l = line.rstrip(" \t\r\n").expandtabs(TABSTOP)
         self.text = l.lstrip(" \t")
         self.tab = len(l) - len(self.text)
+        self.sub = None
     def __str__(self):
         return " " * self.tab + self.text
     def __repr__(self):
-        return "<{tab}>'{text}'".format(tab = self.tab, text = self.text)
+        s = ":" + repr(self.sub) if self.sub is not None else ""
+        return "<{tab}>'{text}'".format(tab = self.tab, text = self.text) + s
 
 class TabException(Exception):
     def __init__(self, line, tab):
@@ -47,7 +49,7 @@ class Block:
             if line.tab < tab:
                 break
             elif line.tab > tab:
-                self.data.append(Block(strings))
+                self.data[-1].sub = Block(strings)
                 if strings.peek() is not None and strings.peek().tab > tab:
                     raise TabException(strings.peek(), tab)
             else:
